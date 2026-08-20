@@ -1,0 +1,6 @@
+{
+  "log_llm_calls": true,
+  "log_llm_path": "logs/llm_calls.jsonl",
+  "print_llm_calls": false
+}
+

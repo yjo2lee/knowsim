@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.key
+*.pem
+.DS_Store
+
+# Run outputs
+output/
+logs/
+
+# Datasets and run outputs fetched into data/ (see README).
+# The cached artefacts that ship with the repo are force-added below.
+data/*
+!data/paper_subset/
+!data/iu_cache/
+!data/init_ks_cache.json
+!data/examples/
+
+# Build bookkeeping
+.release-generated
+.claude/

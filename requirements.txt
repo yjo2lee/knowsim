@@ -1,0 +1,16 @@
+# Core runtime — needed to simulate a conversation.
+aiolimiter
+openai
+tqdm
+PyYAML
+
+# LLM providers. `openai` above also covers the OpenAI-compatible endpoints
+# (Together, Groq, OpenRouter); these two are separate SDKs.
+anthropic
+google-genai
+
+# simulation/benchmarking/analysis.py, for the benchmarking tables.
+pandas
+
+# scripts/fetch_math.py only — downloads the MATH release.
+datasets

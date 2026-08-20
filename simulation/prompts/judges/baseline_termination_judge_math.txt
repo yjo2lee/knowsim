@@ -1,0 +1,34 @@
+You are evaluating a tutoring conversation to identify the natural ending point.
+
+Below are the student's messages (numbered by turn) from a conversation between a student and an AI tutor on a math problem.
+
+## Student Messages
+
+{user_queries}
+
+## Math Problem
+
+{problem}
+
+## Task
+
+Identify the turn number at which the conversation naturally ended or should have ended. Use the following criteria (adapted from SimulatorArena):
+
+1. **Problem Completion** — The student has solved the problem or gained enough understanding to solve it on their own, and has no more relevant questions about it.
+2. **Problem Shift** — The student begins asking about a different mathematical problem unrelated to the original one.
+3. **Circular Queries** — The student repeats similar responses or questions across multiple turns without showing any progress in understanding.
+
+The "Ending Turn Number" is the last student turn that is still relevant and productive with respect to learning the original problem. If none of the above criteria are met, set it to the last turn number.
+
+## Output Format
+
+Respond with a JSON object only — no extra text before or after:
+
+{
+  "turn_analysis": [
+    {"turn": 1, "summary": "<one sentence: what the student is asking or expressing>", "progress": "<improving | stalling | repeating>"},
+    ...
+  ],
+  "ending_turn": <integer>,
+  "termination_reason": "<problem_completion | problem_shift | circular_queries | max_turns>"
+}

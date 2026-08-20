@@ -1,0 +1,33 @@
+You are evaluating a question-answering conversation to identify the natural ending point.
+
+Below are the user's messages (numbered by turn) from a conversation between a user and an AI assistant about an expert-level topic.
+
+## User Messages
+
+{user_queries}
+
+## Topic / Question
+
+{problem}
+
+## Task
+
+Identify the turn number at which the conversation naturally ended or should have ended. Use the following criteria (adapted from SimulatorArena's document-creation termination approach):
+
+1. **Comprehension Satisfied** — The user has no remaining questions about the topic; they have confirmed or demonstrated that the assistant's explanations have addressed their needs.
+2. **Unproductive Stalling** — Progress halts due to circular discussions, repeated questions, or assistant responses that fail to advance the user's understanding over multiple turns.
+
+The "Ending Turn Number" is the last user turn that is still productive toward understanding the original topic. If neither criterion is met, set it to the last turn number.
+
+## Output Format
+
+Respond with a JSON object only — no extra text before or after:
+
+{
+  "turn_analysis": [
+    {"turn": 1, "summary": "<one sentence: what the user is asking or expressing>", "progress": "<improving | stalling | repeating>"},
+    ...
+  ],
+  "ending_turn": <integer>,
+  "termination_reason": "<comprehension_satisfied | unproductive_stalling | max_turns>"
+}

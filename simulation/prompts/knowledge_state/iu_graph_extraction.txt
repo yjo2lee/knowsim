@@ -1,0 +1,80 @@
+You are an expert at analyzing complex questions and their answers to extract structured knowledge representations.
+
+Given a question and its reference answer, extract an Information Unit (IU) Graph. An IU graph represents all the pieces of understanding a person needs to fully comprehend the answer to this question.
+
+## What is an Information Unit (IU)?
+
+An Information Unit is a self-contained piece of understanding that:
+1. Can be independently assessed — you can determine whether someone "gets it" as a standalone unit
+2. Can be explained in 2-4 sentences — not a single fact, not an entire topic
+3. Has prerequisite relationships with other IUs — understanding some IUs requires first understanding others
+
+IUs can represent any type of knowledge: factual, conceptual, procedural, or reasoning-based. Do NOT categorize them by type — just extract them as units of understanding.
+
+## What are prerequisite edges?
+
+A prerequisite edge from IU_A to IU_B means: "To understand IU_B, you need to first understand IU_A."
+
+Only include HARD prerequisites — where understanding B genuinely requires A. Do not include soft/optional relationships.
+
+## Extraction Guidelines
+
+1. **Granularity**: Each IU should be explainable in 2-4 sentences. If it takes only one sentence, it's too fine-grained (merge with related IUs). If it takes a full paragraph+, it's too coarse (split into sub-IUs).
+2. **Coverage**: The IU graph should cover ALL knowledge needed to fully understand the answer. A person who understands every IU in the graph should be able to reconstruct the full answer.
+3. **Prerequisite chains**: Look for knowledge that builds on other knowledge. The graph should have meaningful depth (not just a flat list of independent facts).
+4. **Merging knowledge chains**: Complex questions often involve multiple independent knowledge areas that merge. Identify where separate chains of understanding converge.
+5. **Target**: Aim for 10-30 IUs depending on question complexity. Simple questions may have 10-15, complex questions may have 20-30.
+
+Follow these steps:
+
+### Step 1: Identify the core knowledge areas
+Read the question and answer. What distinct areas of knowledge are required? These will form the independent chains (multiple roots) of your graph.
+
+### Step 2: Extract IUs top-down within each chain
+For each knowledge area, start with the most general principle and work down to the most concrete application in this specific question. Ask: "What does someone need to understand at each level of specificity?"
+
+### Step 3: Check for bridging gaps
+For every prerequisite edge, compute Δgap. Where gaps are large, ask: "What intermediate understanding connects the general principle to the specific application?" Add bridging IUs.
+
+### Step 4: Identify convergence points
+Find where independent chains merge — these are IUs that require prerequisites from multiple different knowledge areas. These convergence points are often where learners struggle most, because they need to integrate knowledge from different domains.
+
+### Step 5: Validate
+- Can someone who understands all IUs reconstruct the full answer?
+- Does every non-root IU have at least one prerequisite?
+- Are there any cycles?
+
+## Input
+
+Question: {question}
+
+Reference Answer: {answer}
+
+## Output Format
+
+Return a JSON object:
+```json
+{{
+  "nodes": [
+    {{
+      "id": "IU1",
+      "concept": "<short concept name>",
+      "description": "<2-4 sentence explanation of this unit of understanding>"
+    }}
+  ],
+  "edges": [
+    {{
+      "from": "<source IU id>",
+      "to": "<target IU id>",
+      "reason": "<brief explanation of why this prerequisite relationship exists>"
+    }}
+  ]
+}}
+```
+
+Important:
+- Every IU (except foundational ones) should have at least one incoming prerequisite edge
+- There should be no cycles in the graph
+- Root nodes (no incoming edges) are foundational concepts
+- Leaf nodes (no outgoing edges) are synthesis-level understandings
+

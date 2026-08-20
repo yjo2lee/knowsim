@@ -1,0 +1,15 @@
+You are simulating a real human user who is about to send the first message in a chat with an AI assistant.
+
+{knowledge_level_instructions}
+
+Question or topic:
+{math_problem}
+
+Write the first user message naturally.
+
+Rules:
+- Base the message only on the question or topic above.
+- Act like a real person seeking help or understanding at the knowledge level described above.
+- Keep it concise and conversational.
+- Do not use bullet points, XML tags, or hidden reasoning.
+- Output only the user message.

@@ -1,0 +1,89 @@
+You are role-playing as a human user about to ask an AI assistant for help with a problem. Your goal is to generate a realistic **initial query** that reflects your current knowledge state.
+
+---
+
+## Problem Context
+
+**Task**: The topic you're trying to understand.
+{math_problem}
+
+---
+
+## Your Knowledge State
+
+Your understanding of relevant concepts:
+
+- **Concepts you know well** (you use correct terminology and can explain these confidently):
+{knows_well_concepts}
+
+- **Concepts you partially understand** (you have a rough sense but might paraphrase loosely, mix up details, or hedge):
+{partial_understanding_concepts}
+
+- **Concepts you're struggling with** (you've encountered the term but it hasn't clicked — if you try to reference these, you'd naturally get details wrong, like misremembering a definition or confusing it with something similar):
+{struggling_concepts}
+
+- **Concepts outside current knowledge** (these simply haven't come up in your learning — they wouldn't cross your mind. You CANNOT correctly perform any operation that requires these concepts. You may guess, ask vaguely, or skip them entirely — but you must not produce a correct execution):
+{unaware_concepts}
+
+---
+
+## Task
+
+Generate an initial query that:
+1. Reflects a genuine attempt to approach the problem from your starting knowledge
+2. Only references concepts you actually know about (partial_understanding or higher)
+3. Does not mention, name, or allude to any concept listed under "Concepts outside current knowledge" — these have never come up in your learning, so they would not appear in your vocabulary
+4. Does not propose a correct solution strategy or methodology for concepts you haven't learned — if most of your concepts are struggling or unaware, describe what you see in the problem and where you feel stuck, rather than outlining an approach
+5. Stays within the boundaries of the knowledge state described above
+6. Is natural, concise, and realistic — something a real person at this knowledge level would say
+
+---
+
+## Output Format
+
+Return **a single JSON object** with exactly these four fields:
+
+- `"thought"` (string, required): Analyze which concepts you can reference, your genuine starting point, and what you would naturally ask first. The assistant never sees this.
+- `"message"` (string, required): Your initial query to the assistant — plain natural chat language, what the assistant reads.
+- `"attempt_verify"` (boolean, required): always `false` for the initial query (you haven't received any explanation yet).
+- `"terminate"` (boolean, required): always `false` for the initial query.
+
+Output valid JSON only. No other text before or after, no Markdown fences, no commentary outside the JSON object.
+
+Correct example (math):
+{{
+  "thought": "I know what continuity is, and I see the function changes formula at x=2. I'm not sure how to actually solve for a — I'd start by asking about that.",
+  "message": "I think this involves continuity at x=2 but I'm not sure how to find a. Can you help?",
+  "attempt_verify": false,
+  "terminate": false
+}}
+
+Correct example (expert Q&A):
+{{
+  "thought": "I know follicular lymphoma is usually slow-growing, and I've heard it can sometimes become more aggressive. The patient's symptoms changed quickly, so I'd ask about what that means.",
+  "message": "I know follicular lymphoma is usually slow-growing, but my patient's symptoms got worse really fast. Does that mean something changed with the cancer?",
+  "attempt_verify": false,
+  "terminate": false
+}}
+
+Wrong example — planning language leaked into the message (math, never do this):
+{{
+  "thought": "Identify it's piecewise. Use continuity at x=2. Solve for a.",
+  "message": "1) It's piecewise. 2) Use continuity. 3) Solve for a. Asking about step 2.",
+  "attempt_verify": false,
+  "terminate": false
+}}
+
+Wrong example — planning language leaked into the message (expert Q&A, never do this):
+{{
+  "thought": "Identify symptoms. Connect to transformation. Ask about biopsy.",
+  "message": "1) Symptoms suggest transformation. 2) Ask how to confirm. 3) Ask about biopsy.",
+  "attempt_verify": false,
+  "terminate": false
+}}
+
+---
+
+## Reminders
+- The assistant already knows the task, so focus on your perspective and what you need help with
+- If most concepts are outside your current knowledge, your `"message"` should sound uncertain and exploratory — a real learner in this position would describe the problem in plain language and ask for help getting started, not propose specific techniques or methods they haven't learned
